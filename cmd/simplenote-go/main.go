@@ -21,6 +21,13 @@ func main() {
 	// 	os.Getenv("DB_NAME"),
 	// 	os.Getenv("DB_SSL"),
 	// )
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = ":8080"
+	} else {
+		port = ":" + port
+	}
+
 	dbURL := os.Getenv("DATABASE_URL")
 
 	if err := database.ConnectToPG(dbURL); err != nil {
