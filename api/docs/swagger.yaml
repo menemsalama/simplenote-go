@@ -1,0 +1,238 @@
+definitions:
+  definitions.NoteRequest:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    type: object
+  definitions.NoteResponse:
+    properties:
+      body:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/definitions.UserResponse'
+        description: gorm attributes are mandatory for querying
+        type: object
+    type: object
+  definitions.SigninResponse:
+    properties:
+      accessToken:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  definitions.UserRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  definitions.UserResponse:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: simplenote-go swagger documentation
+  license: {}
+  title: simplenote
+paths:
+  /auth/signin:
+    post:
+      consumes:
+      - application/json
+      description: If user is "exists" and the credentials are valid, user and AccessToken
+        will be returned.
+      parameters:
+      - description: Add account
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/definitions.UserRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/definitions.SigninResponse'
+      summary: Creates a new access.
+      tags:
+      - auth
+  /notes:
+    get:
+      description: returns a list of notes for all the users.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/definitions.NoteResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List all users notes.
+      tags:
+      - notes
+    post:
+      consumes:
+      - application/json
+      description: creates a note for the signed in user.
+      parameters:
+      - description: Add note
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/definitions.NoteRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/definitions.NoteResponse'
+      security:
+      - BearerAuth: []
+      summary: Creates a user note.
+      tags:
+      - notes
+  /notes/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Updates a note for a user.
+      parameters:
+      - description: Note ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Note fields
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/definitions.NoteRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/definitions.NoteResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a note.
+      tags:
+      - notes
+  /ping:
+    get:
+      description: server status.
+      responses:
+        "200": {}
+      summary: Ping.
+  /users:
+    get:
+      description: returns list of users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/definitions.UserResponse'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List all users.
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: If user name is "exists", error will be returned.
+      parameters:
+      - description: Add user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/definitions.UserRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/definitions.UserResponse'
+      summary: Creates a new user.
+      tags:
+      - users
+  /users/{id}:
+    get:
+      description: returns a user by or ID or current by passing current
+      parameters:
+      - description: id of a user or current
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/definitions.UserResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a user.
+      tags:
+      - users
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
