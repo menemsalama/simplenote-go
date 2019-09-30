@@ -21,7 +21,7 @@ func main() {
 	// 	os.Getenv("DB_NAME"),
 	// 	os.Getenv("DB_SSL"),
 	// )
-	dbURL := os.Getenv("DB_URL")
+	dbURL := os.Getenv("DATABASE_URL")
 
 	if err := database.ConnectToPG(dbURL); err != nil {
 		log.Fatal(err)
