@@ -21,11 +21,9 @@ func main() {
 	// 	os.Getenv("DB_NAME"),
 	// 	os.Getenv("DB_SSL"),
 	// )
-	port := os.Getenv("PORT")
-	if len(port) == 0 {
+	port := ":" + os.Getenv("PORT")
+	if len(port) == 1 {
 		port = ":8080"
-	} else {
-		port = ":" + port
 	}
 
 	dbURL := os.Getenv("DATABASE_URL")
@@ -43,7 +41,7 @@ func main() {
 
 	log.Println("Starting.. port :8080")
 
-	if err := http.ListenAndServe(":8080", api); err != nil {
+	if err := http.ListenAndServe(port, api); err != nil {
 		log.Fatal(err)
 	}
 }
